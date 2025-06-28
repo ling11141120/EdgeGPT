@@ -12,6 +12,7 @@ import java.util.Map;
 @SuppressWarnings("all")
 public abstract class BaseService<T,ID> {
 
+    @Autowired
     protected BaseMapper<T, ID> baseMapper;
 
     public void setBaseMapper(BaseMapper<T, ID> baseMapper) {

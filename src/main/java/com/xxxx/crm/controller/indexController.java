@@ -4,6 +4,7 @@ import com.xxxx.crm.base.BaseController;
 import com.xxxx.crm.service.UserService;
 import com.xxxx.crm.utils.LoginUserUtil;
 import com.xxxx.crm.vo.User;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -18,7 +19,7 @@ import javax.servlet.http.HttpSession;
 @Controller
 public class indexController  extends BaseController {
 
-    @Resource
+    @Autowired
     private UserService userService;
 
     /**

@@ -9,7 +9,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * &#064;Date:  2025/6/27 19:22
  */
 @SpringBootApplication
-@MapperScan("com.xxxx.crm.dao")
+@MapperScan("com.xxxx.crm")
 public class Starter {
 
     public static void main(String[] args) {

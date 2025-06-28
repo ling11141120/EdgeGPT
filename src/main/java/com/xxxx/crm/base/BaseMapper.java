@@ -1,6 +1,7 @@
 package com.xxxx.crm.base;
 
 
+import org.apache.ibatis.annotations.Mapper;
 import org.springframework.dao.DataAccessException;
 
 import java.util.List;
@@ -8,6 +9,7 @@ import java.util.List;
 /**
  * BaseMapper  基本方法定义
  */
+@Mapper
 public interface BaseMapper<T,ID> {
     /**
      * 添加记录返回行数
