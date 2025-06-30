@@ -20,7 +20,7 @@ import java.io.PrintWriter;
  * &#064;Date:  2025/6/28 11:43
  * &#064;Description: 全局异常处理类
  */
-@Component
+//@Component
 public class GlobalExceptionResolver implements HandlerExceptionResolver {
 /*    private final HttpServletResponse response;
 

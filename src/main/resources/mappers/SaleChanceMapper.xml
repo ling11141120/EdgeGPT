@@ -19,8 +19,10 @@
     <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
     <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
   </resultMap>
+
+
   <sql id="Base_Column_List">
-     id, chance_source, customer_name, cgjl, overview, link_man, link_phone, description,
+     id ,chance_source, customer_name, cgjl, overview, link_man, link_phone, description,
     create_man, assign_man, assign_time, state, dev_result, is_valid, create_date, update_date
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
@@ -220,5 +222,53 @@
       update_date = #{updateDate,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
+    <!---->
+<!--  <select id="selectByParams" resultType="com.xxxx.crm.vo.SaleChance"
+          parameterType="com.xxxx.crm.query.SaleChanceQuery">
+    SELECT
+    <include refid="Base_Column_List"/>
+    FROM t_sale_chance s
+    <where>
+        s.is_valid = 1
+      <if test="customerName != null and customerName != ''">
+        AND s.customer_name LIKE concat('%', #{customerName}, '%')
+      </if>
+      <if test="createMan != null and createMan != ''">
+        AND s.create_man = #{createMan}
+      </if>
+      <if test="state != null">
+        AND s.state = #{state}
+      </if>
+    </where>
+  </select>-->
+
+  <select id="selectByParams"
+          resultType="com.xxxx.crm.vo.SaleChance"
+          parameterType="com.xxxx.crm.query.SaleChanceQuery">
+    SELECT
+    s.id, s.chance_source, s.customer_name, s.cgjl, s.overview,
+    s.link_man, s.link_phone, s.description, s.create_man, s.assign_man,
+    s.assign_time, s.state, s.dev_result, s.is_valid, s.create_date, s.update_date,
+    u.user_name AS uname
+    FROM t_sale_chance s
+    LEFT JOIN t_user u ON s.create_man = u.id
+    <where>
+      s.is_valid = 1
+      <if test="customerName != null and customerName != ''">
+        AND s.customer_name LIKE CONCAT('%', #{customerName}, '%')
+      </if>
+      <if test="createMan != null and createMan != ''">
+        AND u.user_name LIKE CONCAT('%', #{createMan}, '%')
+      </if>
+
+
+      <if test="state != null">
+        AND s.state = #{state}
+      </if>
+    </where>
+  </select>
+
+
+
 
 </mapper>
