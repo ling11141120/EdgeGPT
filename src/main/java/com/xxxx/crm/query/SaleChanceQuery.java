@@ -16,6 +16,26 @@ public class SaleChanceQuery extends BaseQuery {
     private String createMan;
     private Integer state;
 
+    //客户开发计划条件查询
+    private String devResult;//开发状态
+    private Integer assignMan;//支配人
+
+    public Integer getAssignMan() {
+        return assignMan;
+    }
+
+    public void setAssignMan(Integer assignMan) {
+        this.assignMan = assignMan;
+    }
+
+    public String getDevResult() {
+        return devResult;
+    }
+
+    public void setDevResult(String devResult) {
+        this.devResult = devResult;
+    }
+
     public String getCustomerName() {
         return customerName;
     }

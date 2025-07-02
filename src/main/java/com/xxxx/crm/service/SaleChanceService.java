@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -77,5 +78,55 @@ public class SaleChanceService extends BaseService<SaleChance,Integer> {
         AssertUtil.isTrue(StringUtils.isBlank(linkPhone),"手机号不能为空");
         AssertUtil.isTrue(PhoneUtil.isMobile(linkPhone),"手机号格式不正确");
     }
+
+    //修改营销机会
+    /**
+     * 1；参数校验
+     * 2；营销机会对应id，非空，数据库中对应的记录存在
+     * 3；执行更新，判断结果
+     * 4；设置相关参数的默认值
+     * 5更新时间，当前系统时间
+     * 6返回受影响的行数
+     * */
+    @Transactional(propagation = Propagation.REQUIRED)
+    public void updateSaleChance(SaleChance saleChance) {
+
+        AssertUtil.isTrue(saleChance.getId()==null,"待更新记录不存在！");
+        SaleChance temp = saleChanceMapper.selectByPrimaryKey(saleChance.getId());
+        AssertUtil.isTrue(temp==null,"待更新记录不存在！");
+        checkSaleChanceParams(saleChance.getCustomerName(),saleChance.getLinkMan(),saleChance.getLinkPhone());
+
+        saleChance.setUpdateDate(new Date());
+        if (StringUtils.isBlank(temp.getAssignMan())){
+
+            if (StringUtils.isBlank(saleChance.getAssignMan())){
+                saleChance.setAssignTime(new Date());
+                saleChance.setState(StateStatus.STATED.getType());
+                saleChance.setDevResult(DevResult.DEVING.getStatus());
+            }
+
+        }else {
+            if (StringUtils.isBlank(saleChance.getAssignMan())){
+                saleChance.setAssignTime(new Date());
+                saleChance.setState(StateStatus.UNSTATE.getType());
+                saleChance.setDevResult(DevResult.UNDEV.getStatus());
+            }else {
+                if (saleChance.getAssignMan().equals(temp.getAssignMan())){
+                    saleChance.setAssignTime(new Date());
+                }else {
+                    saleChance.setAssignTime(temp.getAssignTime());
+                }
+            }
+        }
+        AssertUtil.isTrue(saleChanceMapper.updateByPrimaryKeySelective(saleChance)!=1,"营销机会数据更新失败");
+    }
+
+
+    @Transactional(propagation = Propagation.REQUIRED)
+    public void deleteSaleChance(Integer[] ids){
+        AssertUtil.isTrue(null==ids||ids.length==0,"请选择待删除记录");
+        AssertUtil.isTrue(saleChanceMapper.deleteBatch(ids)!=ids.length,"营销机会数据删除失败");
+    }
+
 
 }

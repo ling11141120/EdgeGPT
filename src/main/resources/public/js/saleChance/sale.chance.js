@@ -81,6 +81,7 @@ layui.use(['table', 'layer'], function () {
 
     // 行监听事件
     table.on("tool(saleChances)", function (obj) {
+        console.log("obj=", obj)
         var layEvent = obj.event;
         if (layEvent === "edit") {
             openAddOrUpdateSaleChanceDialog(obj.data.id);
@@ -88,7 +89,7 @@ layui.use(['table', 'layer'], function () {
             layer.confirm('确定删除当前数据？', {icon: 3, title: "机会数据管理"}, function (index) {
                 $.post(ctx + "/sale_chance/delete", {ids: obj.data.id}, function (data) {
                     if (data.code == 200) {
-                        layer.msg("操作成功！");
+                        layer.msg("你真牛逼！",{icon: 6});
                         tableIns.reload();
                     } else {
                         layer.msg(data.msg, {icon: 5});
@@ -103,7 +104,7 @@ layui.use(['table', 'layer'], function () {
         var url = ctx + "/sale_chance/toSaleChancePage";
         var title = "营销机会管理-机会添加";
         if (sid) {
-            url += "?id=" + sid;
+            url += "?saleChanceId=" + sid;
             title = "营销机会管理-机会更新";
         }
         layui.layer.open({

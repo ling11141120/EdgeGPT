@@ -179,12 +179,7 @@
       <if test="createMan != null" >
         create_man = #{createMan,jdbcType=VARCHAR},
       </if>
-      <if test="assignMan != null" >
-        assign_man = #{assignMan,jdbcType=VARCHAR},
-      </if>
-      <if test="assignTime != null" >
-        assign_time = #{assignTime,jdbcType=TIMESTAMP},
-      </if>
+
       <if test="state != null" >
         state = #{state,jdbcType=INTEGER},
       </if>
@@ -200,6 +195,8 @@
       <if test="updateDate != null" >
         update_date = #{updateDate,jdbcType=TIMESTAMP},
       </if>
+        assign_man = #{assignMan,jdbcType=VARCHAR},
+        assign_time = #{assignTime,jdbcType=TIMESTAMP},
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -265,8 +262,30 @@
       <if test="state != null">
         AND s.state = #{state}
       </if>
+    /*根据开发状态查询*/
+      <if test="devResult != null and devResult!='' ">
+        AND s.dev_result = #{devResult}
+      </if>
+    /*根据指派人进行查询*/
+      <if test="assignMan != null">
+        AND s.assign_man = #{assignMan}
+      </if>
     </where>
   </select>
+
+  <!-- （批量）删除操作 -->
+  <update id="deleteBatch">
+    update
+    t_sale_chance
+    set
+    is_valid = 0
+    where
+    id
+    in
+    <foreach collection="array" item="id" open="(" close=")" separator=",">
+      #{id}
+    </foreach>
+  </update>
 
 
 
