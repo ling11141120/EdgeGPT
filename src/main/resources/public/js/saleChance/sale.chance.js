@@ -48,7 +48,7 @@ layui.use(['table', 'layer'], function () {
         ]]
     });
 
-    // 多条件搜索（修复后的写法 ✅）
+    // 多条件搜索
     $("#searchBtn").on("click", function () {
         alert("点击了搜索按钮！"); // 测试是否绑定上
         console.log("ctx=", ctx);  // 打印 ctx 是否为空
@@ -100,7 +100,7 @@ layui.use(['table', 'layer'], function () {
 
     // 打开添加或修改窗口
     function openAddOrUpdateSaleChanceDialog(sid) {
-        var url = ctx + "/sale_chance/addOrUpdateSaleChancePage";
+        var url = ctx + "/sale_chance/toSaleChancePage";
         var title = "营销机会管理-机会添加";
         if (sid) {
             url += "?id=" + sid;

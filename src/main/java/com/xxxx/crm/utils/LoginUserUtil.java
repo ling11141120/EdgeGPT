@@ -12,14 +12,24 @@ public class LoginUserUtil {
     /**
      * 从cookie中获取userId
      * @param request
-     * @return
+     * @return userId（获取不到返回 0）
      */
     public static int releaseUserIdFromCookie(HttpServletRequest request) {
-        String userIdString = CookieUtil.getCookieValue(request, "userIdStr");
-        if (StringUtils.isBlank(userIdString)) {
+        try {
+            String userIdStr = CookieUtil.getCookieValue(request, "userIdStr");
+
+            if (StringUtils.isBlank(userIdStr)) {
+                // Cookie 不存在或为空，直接返回 0
+                return 0;
+            }
+
+            Integer userId = UserIDBase64.decoderUserID(userIdStr);
+            return userId != null ? userId : 0;
+
+        } catch (Exception e) {
+            // 如果发生解析异常，返回 0（或可抛出自定义异常）
+            System.out.println("LoginUserUtil 解析 userId 异常：" + e.getMessage());
             return 0;
         }
-        Integer userId = UserIDBase64.decoderUserID(userIdString);
-        return userId;
     }
 }
