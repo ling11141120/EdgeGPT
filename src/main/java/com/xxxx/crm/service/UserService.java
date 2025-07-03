@@ -5,6 +5,7 @@ import com.xxxx.crm.dao.UserMapper;
 import com.xxxx.crm.model.UserModel;
 import com.xxxx.crm.utils.AssertUtil;
 import com.xxxx.crm.utils.Md5Util;
+import com.xxxx.crm.utils.PhoneUtil;
 import com.xxxx.crm.utils.UserIDBase64;
 import com.xxxx.crm.vo.User;
 import org.apache.commons.lang3.StringUtils;
@@ -13,6 +14,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.Date;
 
 /**
  * &#064;Author:  LingWeiBo
@@ -115,4 +117,65 @@ public class UserService extends BaseService<User,Integer> {
         AssertUtil.isTrue(StringUtils.isBlank(userPwd),"密码不能为空");
     }
 
+    //添加用户
+    /**
+     * 1参数校验
+     * 用户名
+     * 邮箱，手机号
+     * 2设置参数的默认值
+     * isValid=1
+     * createDate updateDate
+     * 3执行添加，判断结果
+     * 默认密码 md5加密
+     * 4返回受影响的行数
+     * */
+    @Transactional(propagation = Propagation.REQUIRED)
+    public void addUser(User user){
+        checkUserParams(user.getUserName(),user.getEmail(),user.getPhone());
+        user.setIsValid(1);
+        user.setCreateDate(new Date());
+        user.setUpdateDate(new Date());
+        user.setUserPwd(Md5Util.encode("1234"));
+
+        AssertUtil.isTrue(userMapper.insertSelective(user)!=1,"用户添加失败！");
+
+    }
+
+    private void checkUserParams(String userName, String email, String phone) {
+
+        //参数校验
+        AssertUtil.isTrue(StringUtils.isBlank(userName),"用户名不能为空！");
+        //通过用户名查询用户记录数，若存在，则表示用户已存在
+        AssertUtil.isTrue(userMapper.queryUserByName(userName)!=null,"用户已存在！");
+        AssertUtil.isTrue(!PhoneUtil.isMobile(phone),"手机号格式不正确！");
+        AssertUtil.isTrue(StringUtils.isBlank(email),"邮箱不能为空！");
+        AssertUtil.isTrue(StringUtils.isBlank(phone),"手机号不能为空！");
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED)
+    public void updateUser(User user){
+
+        //更新用户，参数校验
+        //参数校验 判断用户id是否存在，判断用户名是否已存在，判断手机号格式是否正确，判断邮箱格式是否正确
+        //设置默认值，设置更新时间
+        //判断受影响的行数
+        AssertUtil.isTrue(null==user.getId()||null==selectByPrimaryKey(user.getId()),"待更新记录不存在");
+       User temp = selectByPrimaryKey(user.getId());
+       AssertUtil.isTrue(null==temp,"更新记录不存在！");
+        AssertUtil.isTrue(user.getUserName().equals(temp.getUserName()),"用户名已存在！");
+        AssertUtil.isTrue(user.getEmail().equals(temp.getEmail()),"邮箱已存在！");
+        AssertUtil.isTrue(user.getPhone().equals(temp.getPhone()),"手机号已存在！");
+        user.setUpdateDate(new Date());
+        AssertUtil.isTrue(updateByPrimaryKeySelective(user)<1,"用户更新失败！");
+    }
+/**
+ * 用户删除
+ * 1判断ids是否为空 长度是否大于0
+ * */
+    public void deleteByIds(Integer[] ids) {
+
+        AssertUtil.isTrue(ids==null||ids.length==0,"待删除记录不存在！");
+        AssertUtil.isTrue(deleteBatch(ids)<ids.length,"用户删除失败！");
+
+    }
 }
