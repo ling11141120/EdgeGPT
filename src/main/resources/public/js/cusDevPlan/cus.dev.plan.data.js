@@ -54,7 +54,7 @@ layui.use(['table','layer'],function(){
             layer.confirm('确定删除当前数据？', {icon: 3, title: "开发计划管理"}, function (index) {
                 $.post(ctx+"/cus_dev_plan/delete",{id:obj.data.id},function (data) {
                     if(data.code==200){
-                        layer.msg("操作成功！");
+                        layer.msg("操作成功！", {icon: 6});
                         tableIns.reload();
                     }else{
                         layer.msg(data.msg, {icon: 5});
@@ -89,13 +89,14 @@ layui.use(['table','layer'],function(){
 
     function updateSaleChanceDevResult(sid,devResult) {
         layer.confirm('确定执行当前操作？', {icon: 3, title: "计划项维护"}, function (index) {
+            var sid=$("[name='id']").val();
             $.post(ctx+"/sale_chance/updateSaleChanceDevResult",
                 {
                     id:sid,
                     devResult:devResult
                 },function (data) {
                 if(data.code==200){
-                    layer.msg("操作成功！");
+                    layer.msg("操作成功！", {icon: 6});
                     layer.closeAll("iframe");
                     //刷新父页面
                     parent.location.reload();

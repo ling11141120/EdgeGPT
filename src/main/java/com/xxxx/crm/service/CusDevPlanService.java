@@ -76,4 +76,24 @@ public class CusDevPlanService extends BaseService<CusDevPlan,Integer> {
         AssertUtil.isTrue(cusDevPlan.getPlanDate()==null,"计划时间不能为空");
     }
 
+    //更新客户开发计划项数据
+    @Transactional(propagation = Propagation.REQUIRED)
+    public void updateCusDevPlan(CusDevPlan cusDevPlan) {
+        AssertUtil.isTrue(cusDevPlan.getId()==null||cusDevPlanMapper.selectByPrimaryKey(cusDevPlan.getId())==null,"待更新记录不存在");
+        cheakCusDevPlanParams(cusDevPlan);
+        cusDevPlan.setUpdateDate(new Date());
+        AssertUtil.isTrue(cusDevPlanMapper.updateByPrimaryKeySelective(cusDevPlan)!=1,"开发计划项更新失败！");
+    }
+
+    public void deleteCusDevPlan(Integer id) {
+
+        //判断id是否为空且数据存在
+        //执行删除操作，修改isValid属性
+        AssertUtil.isTrue(null==id,"待删除记录不存在");
+        CusDevPlan cusDevPlan=cusDevPlanMapper.selectByPrimaryKey(id);
+        cusDevPlan.setIsValid(0);
+        cusDevPlan.setUpdateDate(new Date());
+        AssertUtil.isTrue(cusDevPlanMapper.updateByPrimaryKeySelective(cusDevPlan)!=1,"开发计划项删除失败！");
+
+    }
 }

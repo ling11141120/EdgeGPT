@@ -71,7 +71,32 @@ public class CusDevPlanController extends BaseController{
 
     //计划项更新
     @RequestMapping("addOrUpdateCusDevPlanPage")
-    public  String addOrUpdateCusDevPlanPage(){
+    public  String addOrUpdateCusDevPlanPage(Integer sid, HttpServletRequest request,Integer id ){
+        request.setAttribute("sid", sid);
+        //通过计划项id查询记录
+        CusDevPlan cusDevPlan = cusDevPlanService.selectByPrimaryKey(id);
+        request.setAttribute("cusDevPlan", cusDevPlan);
         return "cusDevPlan/add_update";
     }
+
+
+
+    @RequestMapping("update")
+    @ResponseBody
+    public ResultInfo updateCusDevPlan(CusDevPlan cusDevPlan) {
+        cusDevPlanService.updateCusDevPlan(cusDevPlan);
+        return success("计划项更新成功！");
+
+    }
+    //计划项删除
+    @RequestMapping("delete")
+    @ResponseBody
+    public ResultInfo deleteCusDevPlan(Integer id) {
+        cusDevPlanService.deleteCusDevPlan(id);
+        return success("计划项更新成功！");
+
+    }
+
+
+
 }

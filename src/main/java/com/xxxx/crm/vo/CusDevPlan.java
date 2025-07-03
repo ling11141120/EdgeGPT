@@ -1,5 +1,7 @@
 package com.xxxx.crm.vo;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.util.Date;
 
 public class CusDevPlan {
@@ -9,12 +11,15 @@ public class CusDevPlan {
 
     private String planItem;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date planDate;
 
     private String exeAffect;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date createDate;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date updateDate;
 
     private Integer isValid;
@@ -43,6 +48,7 @@ public class CusDevPlan {
         this.planItem = planItem == null ? null : planItem.trim();
     }
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     public Date getPlanDate() {
         return planDate;
     }
@@ -59,6 +65,7 @@ public class CusDevPlan {
         this.exeAffect = exeAffect == null ? null : exeAffect.trim();
     }
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     public Date getCreateDate() {
         return createDate;
     }
@@ -67,6 +74,7 @@ public class CusDevPlan {
         this.createDate = createDate;
     }
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     public Date getUpdateDate() {
         return updateDate;
     }
