@@ -7,6 +7,8 @@ import java.util.Date;
 public class User {
     private Integer id;
 
+    private String roleIds;
+
     private String userName;
 
     private String userPwd;
@@ -95,5 +97,13 @@ public class User {
 
     public void setUpdateDate(Date updateDate) {
         this.updateDate = updateDate;
+    }
+
+    public String getRoleIds() {
+        return roleIds;
+    }
+
+    public void setRoleIds(String roleIds) {
+        this.roleIds = roleIds;
     }
 }

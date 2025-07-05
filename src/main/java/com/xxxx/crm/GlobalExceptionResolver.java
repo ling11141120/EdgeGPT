@@ -22,71 +22,63 @@ import java.io.PrintWriter;
  */
 //@Component
 public class GlobalExceptionResolver implements HandlerExceptionResolver {
-/*    private final HttpServletResponse response;
-
-    public GlobalExceptionResolver(HttpServletResponse response) {
-        this.response = response;
-    }*/
-
-
 
     @Override
     public ModelAndView resolveException(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
 
-/*
-  设置默认异常处理，返回视图
- */      //判断是否抛出未登录异常 ，如果抛出 则要求用户登录，跳转到登录页面
-        if(ex instanceof NoLoginException){
-            //重定向到登录页面
+        // 如果是未登录异常，重定向到登录页面
+        if (ex instanceof NoLoginException) {
             return new ModelAndView("redirect:/index");
         }
 
-         ModelAndView modelAndView = new ModelAndView("error");
-         modelAndView.addObject("code",500);
-         modelAndView.addObject("message","系统异常，请稍后再试");
-        //判断错误类型
-        if (handler instanceof HandlerMethod){
-            //类型转换
+        // 默认返回 error.jsp 页面
+        ModelAndView modelAndView = new ModelAndView("error");
+        modelAndView.addObject("code", 500);
+        modelAndView.addObject("msg", "系统异常，请稍后再试");
+
+        if (handler instanceof HandlerMethod) {
             HandlerMethod handlerMethod = (HandlerMethod) handler;
-            //获取方法上声名的注解对象
             ResponseBody responseBody = handlerMethod.getMethod().getDeclaredAnnotation(ResponseBody.class);
-            if (responseBody != null){
-                if (ex instanceof ParamsException){
-                    ParamsException p=(ParamsException) ex;
-                    modelAndView.addObject("code",p.getCode());
-                    modelAndView.addObject("msg",p.getMsg());
-                }
-                return modelAndView;
-            }else {
-                   //设置默认异常处理
+
+            // ✅ 如果方法上有 @ResponseBody 注解，说明是要返回 JSON 数据
+            if (responseBody != null) {
                 ResultInfo resultInfo = new ResultInfo();
                 resultInfo.setCode(500);
-                resultInfo.setMsg("系统异常！");
-                //判断异常是否是自定异常
-                if (ex instanceof ParamsException){
+                resultInfo.setMsg("系统异常，请稍后再试");
+
+                if (ex instanceof ParamsException) {
                     ParamsException p = (ParamsException) ex;
                     resultInfo.setCode(p.getCode());
                     resultInfo.setMsg(p.getMsg());
                 }
 
-                //设置响应类型和编码格式
-                response.setContentType("application/json;charset=utf-8");
+                response.setContentType("application/json;charset=UTF-8");
                 PrintWriter out = null;
                 try {
                     out = response.getWriter();
                     out.write(JSON.toJSONString(resultInfo));
+                    out.flush();
                 } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }finally {
-                    if (out != null){
+                    e.printStackTrace();
+                } finally {
+                    if (out != null) {
                         out.close();
                     }
                 }
-                    return null;
+
+                // 返回 null 表示已经手动响应
+                return null;
+            }
+
+            // ✅ 否则是页面请求（返回 error.jsp），设置友好提示
+            if (ex instanceof ParamsException) {
+                ParamsException p = (ParamsException) ex;
+                modelAndView.addObject("code", p.getCode());
+                modelAndView.addObject("msg", p.getMsg());
             }
         }
 
-         return modelAndView;
-
+        return modelAndView;
     }
 }
+

@@ -35,12 +35,14 @@
       #{isValid,jdbcType=INTEGER}, #{createDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.xxxx.crm.vo.User" >
+  <insert id="insertSelective"
+          parameterType="com.xxxx.crm.vo.User"
+          useGeneratedKeys="true"
+          keyProperty="id"
+          keyColumn="id">
     insert into t_user
     <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        id,
-      </if>
+      <!-- 去掉 id 判断，让数据库自动生成 -->
       <if test="userName != null" >
         user_name,
       </if>
@@ -67,9 +69,7 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        #{id,jdbcType=INTEGER},
-      </if>
+      <!-- 去掉 id 判断 -->
       <if test="userName != null" >
         #{userName,jdbcType=VARCHAR},
       </if>

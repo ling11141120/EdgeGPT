@@ -15,31 +15,35 @@ layui.use(['form', 'layer','formSelects'], function () {
         var userId = $("input[name='id']").val();
         var url;
 
+        // 1. 获取选中的角色ID，拼接成字符串
+        var roleIds = layui.formSelects.value('selectId', 'val'); // selectId 是你 formSelects 的 lay-filter
+
+        // 2. 添加到 data.field 中
+        data.field.roleIds = roleIds.join(","); // 逗号分隔字符串 "1,2,3"
+
         // 根据id是否有值来判断是添加操作还是更新操作
-        if (userId) { // 如果id有值，说明是更新操作
-            url = ctx + "/user/update"; // <--- 修正：调用更新接口
-        } else { // 如果id没有值，说明是添加操作
-            url = ctx + "/user/add"; // <--- 修正：调用添加接口
+        if (userId) {
+            url = ctx + "/user/update";
+        } else {
+            url = ctx + "/user/add";
         }
 
         // 发送POST请求
         $.post(url, data.field, function (res) {
             if (res.code == 200) {
                 setTimeout(function () {
-                    // 关闭弹出层（返回值为index的弹出层）
                     top.layer.close(index);
                     top.layer.msg("操作成功！");
-                    // 关闭所有iframe层
                     layer.closeAll("iframe");
-                    // 刷新父页面
                     parent.location.reload();
                 }, 500);
             } else {
-                layer.msg(res.msg, {icon: 5}); // 错误信息
+                layer.msg(res.msg, {icon: 5});
             }
         });
-        return false; // 阻止表单跳转
+        return false;
     });
+
 
     //加载下拉框
     var userId=$("input[name='id']").val();
