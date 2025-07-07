@@ -131,4 +131,25 @@ insert into t_permission (role_id, module_id, acl_value, create_date, update_dat
     where role_id=#{roleId}
   </select>
 
+  <select id="queryUserHasRolePermissionValueByUserId" parameterType="int" resultType="java.lang.String">
+    SELECT DISTINCT
+      p.acl_value
+    FROM
+      t_user_role ur
+        LEFT JOIN t_permission p ON ur.role_id = p.role_id
+    WHERE
+      ur.user_id = #{userId}
+
+  </select>
+
+
+  <select id="countPermissionByModuleId" resultType="java.lang.Integer"  parameterType="int">
+select count(1) from t_permission where module_id= #{moduleId}
+</select>
+
+  <delete id="deletePermissionByModuleId" parameterType="int">
+delete from t_permission where module_id= #{moduleId}
+</delete>
+
+
 </mapper>

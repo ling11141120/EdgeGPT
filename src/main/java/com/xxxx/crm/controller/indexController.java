@@ -1,6 +1,7 @@
 package com.xxxx.crm.controller;
 
 import com.xxxx.crm.base.BaseController;
+import com.xxxx.crm.service.PermissionService;
 import com.xxxx.crm.service.UserService;
 import com.xxxx.crm.utils.LoginUserUtil;
 import com.xxxx.crm.vo.User;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 /**
  * &#064;Author:  LingWeiBo
@@ -21,6 +23,9 @@ public class indexController  extends BaseController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private PermissionService permissionService;
 
     /**
      * 系统登录⻚
@@ -47,6 +52,13 @@ public class indexController  extends BaseController {
         Integer userId = LoginUserUtil.releaseUserIdFromCookie(request);
         User user =userService.selectByPrimaryKey(userId);
         request.getSession().setAttribute("user",user);
+
+        //通过当前用户id查询当前登录用户拥有的资源列表（查询对应资源的授权码）
+        List<String> permissions = permissionService.queryUserHasRolePermissionValueByUserId(userId);
+        request.getSession().setAttribute("permissions",permissions);
+
+
+
         return "main";
     }
 }

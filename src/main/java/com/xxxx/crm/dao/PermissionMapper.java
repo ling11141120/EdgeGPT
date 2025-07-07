@@ -19,4 +19,13 @@ public interface PermissionMapper extends BaseMapper<permission,Integer> {
 
     //通过角色id查询权限id
     List<Integer> queryRoleHasModuleIdsByRoleId(Integer roleId);
+
+    //通过用户id查询权限值
+    List<String> queryUserHasRolePermissionValueByUserId(Integer userId);
+
+    //通过模块id查询权限记录数
+    Integer countPermissionByModuleId(Integer id);
+
+    //通过模块id删除权限记录
+    Integer deletePermissionByModuleId(Integer id);
 }

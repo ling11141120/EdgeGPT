@@ -32,7 +32,7 @@
 </form>
 
 
-
+	</blockquote>
 	<table id="saleChanceList" class="layui-table"  lay-filter="saleChances"></table>
 
 
@@ -56,7 +56,7 @@
 		<a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="del">删除</a>
 	</script>
 
-
+</form>
 <script type="text/javascript" src="${ctx}/js/saleChance/sale.chance.js"></script>
 
 </body>
